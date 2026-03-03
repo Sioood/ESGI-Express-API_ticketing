@@ -1,4 +1,4 @@
-const { Op } = require('sequelize');
+const { Op, Sequelize } = require('sequelize');
 
 function ticketWhereClauseForUser(user) {
   if (user.role === 'support') {
@@ -13,7 +13,7 @@ function ticketWhereClauseForUser(user) {
     return {
       [Op.or]: [
         { authorId: user.id },
-        { '$author.managerId$': user.id },
+        Sequelize.where(Sequelize.col('author.manager_id'), user.id),
       ],
     };
   }
