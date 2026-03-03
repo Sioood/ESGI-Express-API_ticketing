@@ -1,0 +1,167 @@
+### Créer des utilisateurs (collaborateur, manager, support)
+
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "name": "Alice Collaborator",
+  "email": "alice@example.com",
+  "password": "password",
+  "role": "collaborator"
+}
+
+###
+
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "name": "Bob Manager",
+  "email": "bob@example.com",
+  "password": "password",
+  "role": "manager"
+}
+
+###
+
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "name": "Sophie Support",
+  "email": "sophie@example.com",
+  "password": "password",
+  "role": "support"
+}
+
+###
+
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "name": "Sam Support",
+  "email": "sam@example.com",
+  "password": "password",
+  "role": "support"
+}
+
+### Login (récupérer les tokens)
+
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice@example.com",
+  "password": "password"
+}
+
+###
+
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "bob@example.com",
+  "password": "password"
+}
+
+###
+
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "sophie@example.com",
+  "password": "password"
+}
+
+###
+
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "sam@example.com",
+  "password": "password"
+}
+
+### Alice crée un ticket (priorité high autorisée)
+
+POST http://localhost:3000/tickets
+Content-Type: application/json
+Authorization: Bearer {{ALICE_TOKEN}}
+
+{
+  "title": "Problème d'accès VPN",
+  "description": "Impossible de me connecter au VPN de l'entreprise.",
+  "category": "access",
+  "priority": "high"
+}
+
+### Sophie (support) liste tous les tickets
+
+GET http://localhost:3000/tickets
+Authorization: Bearer {{SOPHIE_TOKEN}}
+
+### Sophie assigne le ticket à elle-même (remplacer :id par l'id du ticket)
+
+PATCH http://localhost:3000/tickets/:id/assign
+Content-Type: application/json
+Authorization: Bearer {{SOPHIE_TOKEN}}
+
+{
+  "assigneeId": 3
+}
+
+### Sophie passe le ticket en in_progress puis resolved
+
+PATCH http://localhost:3000/tickets/:id/status
+Content-Type: application/json
+Authorization: Bearer {{SOPHIE_TOKEN}}
+
+{
+  "status": "in_progress"
+}
+
+###
+
+PATCH http://localhost:3000/tickets/:id/status
+Content-Type: application/json
+Authorization: Bearer {{SOPHIE_TOKEN}}
+
+{
+  "status": "resolved"
+}
+
+### Sophie ajoute un commentaire interne
+
+POST http://localhost:3000/tickets/:id/comments
+Content-Type: application/json
+Authorization: Bearer {{SOPHIE_TOKEN}}
+
+{
+  "content": "Analyse effectuée, problème identifié sur le serveur VPN.",
+  "internal": true
+}
+
+### Alice consulte son ticket (ne voit pas les commentaires internes)
+
+GET http://localhost:3000/tickets/:id
+Authorization: Bearer {{ALICE_TOKEN}}
+
+### Alice ferme le ticket résolu
+
+PATCH http://localhost:3000/tickets/:id/status
+Content-Type: application/json
+Authorization: Bearer {{ALICE_TOKEN}}
+
+{
+  "status": "closed"
+}
+
+### Bob (manager) filtre les tickets par priorité et catégorie
+
+GET http://localhost:3000/tickets?priority=high&category=access
+Authorization: Bearer {{BOB_TOKEN}}
+

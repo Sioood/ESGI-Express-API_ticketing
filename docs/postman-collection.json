@@ -1,0 +1,362 @@
+{
+  "info": {
+    "name": "API Ticketing Nexora",
+    "_postman_id": "00000000-0000-0000-0000-000000000001",
+    "description": "Collection Postman pour l'API Ticketing Nexora (auth, utilisateurs, tickets, commentaires, filtres).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Users",
+      "item": [
+        {
+          "name": "Create Alice (Collaborator)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alice Collaborator\",\n  \"email\": \"alice@example.com\",\n  \"password\": \"password\",\n  \"role\": \"collaborator\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Bob (Manager)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Bob Manager\",\n  \"email\": \"bob@example.com\",\n  \"password\": \"password\",\n  \"role\": \"manager\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Sophie (Support)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Sophie Support\",\n  \"email\": \"sophie@example.com\",\n  \"password\": \"password\",\n  \"role\": \"support\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login Alice",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"alice@example.com\",\n  \"password\": \"password\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login Bob",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"bob@example.com\",\n  \"password\": \"password\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login Sophie",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"sophie@example.com\",\n  \"password\": \"password\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tickets Scenario",
+      "item": [
+        {
+          "name": "Alice creates ticket",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ALICE_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tickets",
+              "host": ["{{baseUrl}}"],
+              "path": ["tickets"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Problème d'accès VPN\",\n  \"description\": \"Impossible de me connecter au VPN.\",\n  \"category\": \"access\",\n  \"priority\": \"high\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Sophie list all tickets",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{SOPHIE_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tickets",
+              "host": ["{{baseUrl}}"],
+              "path": ["tickets"]
+            }
+          }
+        },
+        {
+          "name": "Sophie assign ticket to herself",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{SOPHIE_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tickets/{{TICKET_ID}}/assign",
+              "host": ["{{baseUrl}}"],
+              "path": ["tickets", "{{TICKET_ID}}", "assign"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"assigneeId\": {{SOPHIE_ID}}\n}"
+            }
+          }
+        },
+        {
+          "name": "Sophie set status to in_progress",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{SOPHIE_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tickets/{{TICKET_ID}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["tickets", "{{TICKET_ID}}", "status"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"in_progress\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Sophie set status to resolved",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{SOPHIE_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tickets/{{TICKET_ID}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["tickets", "{{TICKET_ID}}", "status"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"resolved\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Sophie adds internal comment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{SOPHIE_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tickets/{{TICKET_ID}}/comments",
+              "host": ["{{baseUrl}}"],
+              "path": ["tickets", "{{TICKET_ID}}", "comments"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Analyse effectuée, problème identifié sur le serveur VPN.\",\n  \"internal\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Alice view ticket",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ALICE_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tickets/{{TICKET_ID}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["tickets", "{{TICKET_ID}}"]
+            }
+          }
+        },
+        {
+          "name": "Alice closes ticket",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ALICE_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tickets/{{TICKET_ID}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["tickets", "{{TICKET_ID}}", "status"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"closed\"\n}"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "ALICE_TOKEN",
+      "value": ""
+    },
+    {
+      "key": "SOPHIE_TOKEN",
+      "value": ""
+    },
+    {
+      "key": "BOB_TOKEN",
+      "value": ""
+    },
+    {
+      "key": "TICKET_ID",
+      "value": ""
+    },
+    {
+      "key": "SOPHIE_ID",
+      "value": "3"
+    }
+  ]
+}
+

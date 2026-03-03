@@ -1,0 +1,278 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-03-03T00:00:00.000Z",
+  "__export_source": "insomnia:generated",
+  "resources": [
+    {
+      "_id": "wrk_api_ticketing",
+      "_type": "workspace",
+      "name": "API Ticketing Nexora",
+      "description": "Workspace Insomnia pour l'API Ticketing Nexora"
+    },
+    {
+      "_id": "env_api_ticketing",
+      "_type": "environment",
+      "parentId": "wrk_api_ticketing",
+      "name": "Base Environment",
+      "data": {
+        "baseUrl": "http://localhost:3000",
+        "ALICE_TOKEN": "",
+        "SOPHIE_TOKEN": "",
+        "BOB_TOKEN": "",
+        "TICKET_ID": ""
+      }
+    },
+    {
+      "_id": "fld_users",
+      "_type": "request_group",
+      "parentId": "wrk_api_ticketing",
+      "name": "Users"
+    },
+    {
+      "_id": "req_create_alice",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Create Alice (Collaborator)",
+      "method": "POST",
+      "url": "{{ baseUrl }}/users",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Alice Collaborator\",\n  \"email\": \"alice@example.com\",\n  \"password\": \"password\",\n  \"role\": \"collaborator\"\n}"
+      }
+    },
+    {
+      "_id": "req_create_bob",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Create Bob (Manager)",
+      "method": "POST",
+      "url": "{{ baseUrl }}/users",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Bob Manager\",\n  \"email\": \"bob@example.com\",\n  \"password\": \"password\",\n  \"role\": \"manager\"\n}"
+      }
+    },
+    {
+      "_id": "req_create_sophie",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Create Sophie (Support)",
+      "method": "POST",
+      "url": "{{ baseUrl }}/users",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Sophie Support\",\n  \"email\": \"sophie@example.com\",\n  \"password\": \"password\",\n  \"role\": \"support\"\n}"
+      }
+    },
+    {
+      "_id": "fld_auth",
+      "_type": "request_group",
+      "parentId": "wrk_api_ticketing",
+      "name": "Auth"
+    },
+    {
+      "_id": "req_login_alice",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Login Alice",
+      "method": "POST",
+      "url": "{{ baseUrl }}/auth/login",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"alice@example.com\",\n  \"password\": \"password\"\n}"
+      }
+    },
+    {
+      "_id": "req_login_bob",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Login Bob",
+      "method": "POST",
+      "url": "{{ baseUrl }}/auth/login",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"bob@example.com\",\n  \"password\": \"password\"\n}"
+      }
+    },
+    {
+      "_id": "req_login_sophie",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Login Sophie",
+      "method": "POST",
+      "url": "{{ baseUrl }}/auth/login",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"sophie@example.com\",\n  \"password\": \"password\"\n}"
+      }
+    },
+    {
+      "_id": "fld_tickets",
+      "_type": "request_group",
+      "parentId": "wrk_api_ticketing",
+      "name": "Tickets Scenario"
+    },
+    {
+      "_id": "req_alice_create_ticket",
+      "_type": "request",
+      "parentId": "fld_tickets",
+      "name": "Alice creates ticket",
+      "method": "POST",
+      "url": "{{ baseUrl }}/tickets",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"Problème d'accès VPN\",\n  \"description\": \"Impossible de me connecter au VPN.\",\n  \"category\": \"access\",\n  \"priority\": \"high\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ ALICE_TOKEN }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_sophie_list_tickets",
+      "_type": "request",
+      "parentId": "fld_tickets",
+      "name": "Sophie list tickets",
+      "method": "GET",
+      "url": "{{ baseUrl }}/tickets",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ SOPHIE_TOKEN }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_sophie_assign_ticket",
+      "_type": "request",
+      "parentId": "fld_tickets",
+      "name": "Sophie assign ticket to herself",
+      "method": "PATCH",
+      "url": "{{ baseUrl }}/tickets/{{ TICKET_ID }}/assign",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"assigneeId\": 3\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ SOPHIE_TOKEN }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_sophie_status_in_progress",
+      "_type": "request",
+      "parentId": "fld_tickets",
+      "name": "Sophie set status to in_progress",
+      "method": "PATCH",
+      "url": "{{ baseUrl }}/tickets/{{ TICKET_ID }}/status",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"status\": \"in_progress\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ SOPHIE_TOKEN }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_sophie_status_resolved",
+      "_type": "request",
+      "parentId": "fld_tickets",
+      "name": "Sophie set status to resolved",
+      "method": "PATCH",
+      "url": "{{ baseUrl }}/tickets/{{ TICKET_ID }}/status",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"status\": \"resolved\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ SOPHIE_TOKEN }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_sophie_add_internal_comment",
+      "_type": "request",
+      "parentId": "fld_tickets",
+      "name": "Sophie adds internal comment",
+      "method": "POST",
+      "url": "{{ baseUrl }}/tickets/{{ TICKET_ID }}/comments",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"content\": \"Analyse effectuée, problème identifié sur le serveur VPN.\",\n  \"internal\": true\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ SOPHIE_TOKEN }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_alice_view_ticket",
+      "_type": "request",
+      "parentId": "fld_tickets",
+      "name": "Alice view ticket",
+      "method": "GET",
+      "url": "{{ baseUrl }}/tickets/{{ TICKET_ID }}",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ ALICE_TOKEN }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_alice_close_ticket",
+      "_type": "request",
+      "parentId": "fld_tickets",
+      "name": "Alice closes ticket",
+      "method": "PATCH",
+      "url": "{{ baseUrl }}/tickets/{{ TICKET_ID }}/status",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"status\": \"closed\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ ALICE_TOKEN }}"
+        }
+      ]
+    }
+  ]
+}
+
